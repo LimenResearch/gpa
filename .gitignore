@@ -1,0 +1,10 @@
+#ignore all kind of files
+*
+!*/
+#except files with extension
+!*.py
+!.gitignore
+!*.pdf
+!*.csv
+!*.md
+!*.html
