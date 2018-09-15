@@ -143,11 +143,11 @@ if __name__ == "__main__":
     # f = FunctionGraph(X, [[square, 0, 0.2], [square, 0.2, 5], [square, 5, 10.1]], add_noise = False)
     ####
     #international airline passengers
-    Y = np.genfromtxt('./data/international-airline-passengers.csv', delimiter=';')[1:,1]
-    X = range(len(Y))
-    # Nile flow
-    # Y = np.genfromtxt('./data/Nile.csv', delimiter=',')[1:,2]
+    # Y = np.genfromtxt('../../data/international-airline-passengers.csv', delimiter=';')[1:,1]
     # X = range(len(Y))
+    # Nile flow
+    Y = np.genfromtxt('../../data/kurlin_height/Nile.csv', delimiter=',')[1:,2]
+    X = range(len(Y))
     f = FunctionGraph(X,Y)
     ####
     f.init_and_build_simplex_tree()

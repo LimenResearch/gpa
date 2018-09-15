@@ -4,6 +4,7 @@ import numpy.ma as mask
 from math import sqrt
 from collections import Counter
 import colorsys
+from perscomb.utils import plot_persistence_diagram
 
 class CornerPoint(object):
     """A point of a persistence diagram
@@ -109,11 +110,6 @@ class PersistenceDiagram(object):
         """
         if persistence_to_plot is None:
             persistence_to_plot = self.persistence
-        # try:
-        #     import gudhi as gd
-        #     ax_handle = gd.plot_persistence_diagram(persistence_to_plot)
-        # except:
-        from utils import plot_persistence_diagram
         ax_handle = plot_persistence_diagram(persistence_to_plot)
         return ax_handle
 
