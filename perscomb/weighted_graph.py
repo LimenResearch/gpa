@@ -343,12 +343,13 @@ class WeightedGraph(object):
                 labels = {k : np.round(v, decimals = 2) for k,v in labels.items()}
                 nx.draw_networkx_edge_labels(self.G, pos, edge_labels = labels,
                                              ax = self.steady_ax_arr[0])
-            if export_json:
+            if export_json is not None:
                 steady_json = self.export_graph_and_hubs_as_json(nodes_color_map,
                                                                   nodelist,
                                                                   node_size,
                                                                   self.steady_pd.proper_cornerpoints)
-                with open('steady.json', 'w') as outfile:
+                name = export_json + '_steady.json',
+                with open(name, 'w') as outfile:
                     json.dump(steady_json, outfile)
             if return_attr:
                 return nodes_color_map, nodelist, node_size, self.steady_pd.proper_cornerpoints
@@ -416,12 +417,13 @@ class WeightedGraph(object):
                 labels = {k : np.round(v, decimals = 2) for k,v in labels.items()}
                 nx.draw_networkx_edge_labels(self.G, pos, edge_labels = labels,
                                             ax = self.ranging_ax_arr[0])
-            if export_json:
+            if export_json is not None:
                 ranging_json = self.export_graph_and_hubs_as_json(nodes_color_map,
                                                                    nodelist,
                                                                    node_size,
                                                                    self.ranging_pd.proper_cornerpoints)
-                with open('ranging.json', 'w') as outfile:
+                name = export_json + '_ranging.json'
+                with open(name, 'w') as outfile:
                     json.dump(ranging_json, outfile)
             if return_attr:
                 return nodes_color_map, nodelist, node_size, self.ranging_pd.proper_cornerpoints
