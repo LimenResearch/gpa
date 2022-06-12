@@ -99,7 +99,7 @@ cd perscomb
 pip install -e ./
 ```
 
-## Authors
+## Team
 
 * **Mattia G Bergomi**
 * **Massimo Ferri**
