@@ -6,8 +6,8 @@ if platform == "darwin":
     import matplotlib
     matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-from perscomb.read_data_from_csv import read_graph_structure_from_csv
-from perscomb.weighted_graph import WeightedGraph
+from hubpersistence.read_data_from_csv import read_graph_structure_from_csv
+from hubpersistence.weighted_graph import WeightedGraph
 
 path_to_csv = '/Users/mattiagiuseppebergomi/Desktop/perscomb/code/cornerpoint_selection/data/literature/GOT/all.csv'
 graph_structure = read_graph_structure_from_csv(path_to_csv)

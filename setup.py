@@ -1,7 +1,7 @@
-# Copyright (C) 2018-Mattia G. Bergomi, Massimo Ferri, Antonella Tavaglione,
+# Copyright (C) 2022-Mattia G. Bergomi, Massimo Ferri, Antonella Tavaglione,
 # Lorenzo Zuffi
 #
-# perscomb is free software: you can redistribute it and/or modify
+# hubpersistence is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -15,8 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# For more information please send an email (mattiagbergomi@gmail.com) or
-# use the tools available at https://gitlab.com/mattia.bergomi.
+# For more information please send an email (mattiagbergomi@gmail.com).
 #
 import os
 import sys
@@ -31,7 +30,7 @@ if CURRENT_PYTHON < REQUIRED_PYTHON:
 ==========================
 Unsupported Python version
 ==========================
-This version of perscomb requires Python {}.{}, but you're trying to
+This version of hubpersistence requires Python {}.{}, but you're trying to
 install it on Python {}.{}.
 """.format(*(REQUIRED_PYTHON + CURRENT_PYTHON)))
     sys.exit(1)
@@ -46,7 +45,7 @@ requirements = ['Cython==0.27.3',
 EXCLUDE_FROM_PACKAGES = []
 
 setup(
-    name='perscomb',
+    name='hubpersistence',
     version='0.0.0-prealpha',
     python_requires='>={}.{}'.format(*REQUIRED_PYTHON),
     url='',

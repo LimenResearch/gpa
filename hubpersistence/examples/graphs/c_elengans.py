@@ -6,8 +6,8 @@ if platform == "darwin":
 import sys
 sys.path.append('../../')
 import matplotlib.pyplot as plt
-from perscomb.read_data_from_csv import read_graph_structure_from_csv
-from perscomb.weighted_graph import WeightedGraph
+from hubpersistence.read_data_from_csv import read_graph_structure_from_csv
+from hubpersistence.weighted_graph import WeightedGraph
 
 def opp(x):
     return -x

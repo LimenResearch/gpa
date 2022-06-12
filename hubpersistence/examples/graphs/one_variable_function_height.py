@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.signal import argrelmin, argrelmax
-from perscomb.persistence_diagram import CornerPoint, PersistenceDiagram
+from hubpersistence.persistence_diagram import CornerPoint, PersistenceDiagram
 sns.set()
 
 class FunctionGraph(object):

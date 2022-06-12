@@ -7,8 +7,8 @@ if platform == "darwin":
     matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import numpy as np
-from perscomb.read_data_from_csv import read_csv_distance_matrix
-from perscomb.weighted_graph import WeightedGraph
+from hubpersistence.read_data_from_csv import read_csv_distance_matrix
+from hubpersistence.weighted_graph import WeightedGraph
 import seaborn as sns
 sns.set()
 

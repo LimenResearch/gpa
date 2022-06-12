@@ -4,7 +4,7 @@ import numpy.ma as mask
 from math import sqrt
 from collections import Counter
 import colorsys
-from perscomb.utils import plot_persistence_diagram
+from hubpersistence.utils import plot_persistence_diagram
 
 class CornerPoint(object):
     """A point of a persistence diagram

@@ -12,7 +12,7 @@ import numpy as np
 import itertools
 import json
 from utils import grouped
-from perscomb.persistence_diagram import PersistenceDiagram, CornerPoint
+from hubpersistence.persistence_diagram import PersistenceDiagram, CornerPoint
 
 class WeightedGraph(object):
     """

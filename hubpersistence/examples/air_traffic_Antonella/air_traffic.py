@@ -10,8 +10,8 @@ if platform == "darwin":
 import matplotlib.pyplot as plt
 import numpy as np
 from pprint import pprint
-from perscomb.air_traffic_Antonella.read_data_from_csv_for_air_traffic import *
-from perscomb.weighted_graph import WeightedGraph
+from hubpersistence.air_traffic_Antonella.read_data_from_csv_for_air_traffic import *
+from hubpersistence.weighted_graph import WeightedGraph
 
 def reproduce_thesis_figure(graph_structure_number = 2):
     above_max_diagonal_gap = True
