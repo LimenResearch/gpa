@@ -26,7 +26,7 @@ import subprocess
 import pathlib
 
 CURRENT_PYTHON = sys.version_info[:2]
-REQUIRED_PYTHON = (2, 7)
+REQUIRED_PYTHON = (3, 9)
 if CURRENT_PYTHON < REQUIRED_PYTHON:
     sys.stderr.write("""
 ==========================
@@ -62,8 +62,8 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Scientific/Engineering'
         'Topic :: Scientific/Engineering :: Machine Learning',
         'Topic :: Scientific/Engineering :: Data Analysis',
