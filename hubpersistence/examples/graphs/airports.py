@@ -13,6 +13,7 @@ def minus(array):
     return -array
 
 if __name__ == "__main__":
+    from hubpersistence.constants import DATA_FOLDER
     path_to_csv = '/Users/mattiagiuseppebergomi/Desktop/perscomb/code/cornerpoint_selection/data/transportation/Airports.csv'
     graph_structure = read_csv_distance_matrix(path_to_csv)
 
