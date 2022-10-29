@@ -1,9 +1,4 @@
-from __future__ import absolute_import, division, print_function
 import os
-from sys import platform
-if platform == "darwin":
-    import matplotlib
-    matplotlib.use("TkAgg")
 import pandas as pd
 import matplotlib.pyplot as plt
 from hubpersistence.read_data_from_csv import read_graph_structure_from_csv

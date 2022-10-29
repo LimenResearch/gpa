@@ -1,10 +1,3 @@
-from __future__ import absolute_import, division, print_function
-import sys
-sys.path.append('../../')
-from sys import platform
-if platform == "darwin":
-    import matplotlib
-    matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from pprint import pprint
 from hubpersistence.read_data_from_csv import read_graph_structure_from_csv

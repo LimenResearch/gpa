@@ -3,8 +3,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pprint import pprint
-from hubpersistence.examples.air_traffic.read_data import *
-from hubpersistence.weighted_graph import WeightedGraph
+from .read_data import *
+from ...weighted_graph import WeightedGraph
 
 def reproduce_thesis_figure(graph_structure_number = 2):
     above_max_diagonal_gap = True

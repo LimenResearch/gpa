@@ -1,10 +1,3 @@
-from __future__ import absolute_import, division, print_function
-from sys import platform
-import sys
-sys.path.append('../../')
-if platform == "darwin":
-    import matplotlib
-    matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from pprint import pprint
 from hubpersistence.read_data_from_csv import read_csv_distance_matrix
