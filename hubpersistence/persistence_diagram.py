@@ -92,7 +92,7 @@ class PersistenceDiagram(object):
         self.persistence_to_plot = [(c.k, (c.birth, c.death))
                                     for c in self.cornerpoints]
 
-    def plot_gudhi(self, ax_handle, cornerpoints, persistence_to_plot = None,
+    def plot_gudhi(self, ax_handle, cornerpoints=None, persistence_to_plot = None,
                    coloring=None):
         """plots the persistence diagram in ax_handle
 
@@ -100,8 +100,8 @@ class PersistenceDiagram(object):
             if not None, is the list of colors to be used on the
             persistence diagram's points.
         """
-        if persistence_to_plot is None:
-            persistence_to_plot = self.persistence
+        cornerpoints = cornerpoints or self.cornerpoints
+        persistence_to_plot = persistence_to_plot or self.persistence
         ax_handle = plot_persistence_diagram(persistence_to_plot,
                                              cornerpoints = cornerpoints,
                                              coloring = coloring)

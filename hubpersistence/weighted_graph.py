@@ -1,9 +1,5 @@
 import numpy as np
 import networkx as nx
-import platform
-if platform.system() == "Darwin":
-    import matplotlib
-    matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from itertools import chain
 from hubpersistence.utils import get_powerset_, get_supersets
@@ -166,6 +162,49 @@ class WeightedGraph:
         for value in self.transformed_edges:
             edges = self.get_subgraph_edges(value)
             self.filtration.append(self.get_subgraph(edges))
+            
+    @staticmethod
+    def get_number_of_neighbours(graph, node):
+        """Returns the number of neighbours of a node
+        """
+        return len(graph[node])
+
+    def is_t_hub(self, node = None, subgraph = None):
+        """Given a node and a graph returns True if node is a temporary hub
+        according to the definition given in [1]_
+        .. [1] Link to the paper
+        """
+        if subgraph is None:
+            subgraph = self.G
+        degree_node = self.get_number_of_neighbours(subgraph, node)
+        degrees_neighbouring_nodes = [self.get_number_of_neighbours(subgraph, neighbouring_node)
+                                        for neighbouring_node in subgraph[node]]
+
+        return max(degrees_neighbouring_nodes) < degree_node
+
+    def get_t_hubs(self, subgraph = None):
+        """Returns the list of the t_hubs in a subgraph. Typically subgraph is
+        one of the subgraphs of the filtration of self.G
+        """
+        if subgraph is None:
+            subgraph = self.G
+
+        return [node for node in list(subgraph.nodes)
+                    if self.is_t_hub(node = node, subgraph = subgraph)]
+
+    def get_temporary_hubs_along_filtration(self):
+        """Gets the nodes that are temporary hubs along the the filtration
+        """
+        self.filtered_t_hubs = {i : self.get_t_hubs(subgraph = g)
+                                    for i, g in enumerate(self.filtration)}
+        
+        cornerpoint_vertices = self.get_list_of_unique_vertices(self.filtered_t_hubs)
+        self.cornerpoint_vertices = cornerpoint_vertices
+        self.persistence = {i: [k for k in self.filtered_t_hubs
+                                if cornerpoint_vertex in self.filtered_t_hubs[k]]
+                                for i, cornerpoint_vertex in enumerate(cornerpoint_vertices)}
+        self.persistence = {key: value for key, value in self.persistence.items()
+                            if len(value) >= 1}
 
 
     def get_eulerian_filtration(self, superset = False):
@@ -344,7 +383,7 @@ class WeightedGraph:
         sub_persistences.sort(key=len)
         return sub_persistences
 
-    def steady_persistence(self):
+    def steady_persistence(self, above_max_diagonal_gap=False, gap_number=0):
         """Ranks steady subgraphs according to their persistence. Recall that a
         temporary subgraph is steady if it lives through consecutive sublevel sets of
         the filtration induced by the weights of the graph.
@@ -352,6 +391,7 @@ class WeightedGraph:
         self.steady_cornerpoints = []
 
         for vertices in self.persistence:
+            print("vertices: ", vertices)
             pers = self.persistence[vertices]
             max_steady_pers = self.get_maximum_steady_persistence(pers)
             births = [min(c) for c in max_steady_pers]
@@ -367,8 +407,11 @@ class WeightedGraph:
                 self.steady_cornerpoints.append(c)
 
         self.steady_pd = PersistenceDiagram(cornerpoints = self.steady_cornerpoints)
+        if above_max_diagonal_gap:
+            _,_ = self.steady_pd.get_nth_widest_gap(n = gap_number)
+            self.gap_number = gap_number
 
-    def ranging_persistence(self):
+    def ranging_persistence(self, above_max_diagonal_gap=False, gap_number=0):
         """Ranks ranging subgraphs according to their persistence. Recall that a
         temporary subgraph is said ranging if there exist Gm and Gn sublevel sets
         (m < n) in which the temporary subgraph is alive.
@@ -389,6 +432,9 @@ class WeightedGraph:
             self.ranging_cornerpoints.append(c)
 
         self.ranging_pd = PersistenceDiagram(cornerpoints = self.ranging_cornerpoints)
+        if above_max_diagonal_gap:
+            _,_ = self.ranging_pd.get_nth_widest_gap(n = gap_number)
+            self.gap_number = gap_number
 
     @staticmethod
     def get_eulerian_subgraphs(graph):
@@ -418,7 +464,6 @@ class WeightedGraph:
 
             return subgraphs
 
-
     def get_blocks_from_filt(self, subgraph):
         max_blocks = nx.k_components(subgraph)
         newfilt=[]
@@ -432,13 +477,11 @@ class WeightedGraph:
 
         return newfilt
 
-
     @staticmethod
     def get_edge_blocks_subgraphs(graph):
         return [set(comb) for comb in get_powerset_(list(graph.nodes))
                 if (nx.is_k_edge_connected(graph.subgraph(comb),2) and
                     nx.is_k_edge_connected(graph.subgraph(comb),1))]
-
 
     def plot_filtration(self):
         """Plots all the subgraphs of self.G given by considering the sublevel
@@ -451,7 +494,6 @@ class WeightedGraph:
             title = str(i + 1) + ordinals[i] if i < 3 else str(i + 1) + 'th'
             self._draw(graph = h, plot_weights = True, ax = self.ax_arr[i],
                         title = title + " sublevel set")
-
 
     def _draw(self, graph = None, plot_weights = True, ax = None, title = None):
         """Plots a graph using networkx wrappers
@@ -479,21 +521,23 @@ class WeightedGraph:
             nx.draw_networkx_edge_labels(graph, pos, edge_labels = labels,
                                         ax = ax)
 
-
     def plot_persistence_diagram(self, title = None, coloring = None):
         """Uses gudhi and networkx wrappers to plot the persistence diagram and
         the subgraphs obtained through the steady-subgraphs analysis, respectively
         """
+        pds = []
         if hasattr(self, "steady_pd"):
-            pd = self.steady_pd
-        elif hasattr(self, "ranging_pd"):
-            pd = self.ranging_pd
-        else:
+            pds.append(self.steady_pd)
+        if hasattr(self, "ranging_pd"):
+            pds.append(self.ranging_pd)
+        if len(pds) == 0:
             raise ValueError("Compute first a persistence diagram.")
-        fig, ax = plt.subplots()
-        pd.plot_gudhi(ax, cornerpoints = pd.cornerpoints,
-                      persistence_to_plot = pd.persistence_to_plot,
-                      coloring=coloring)
+        _, axs = plt.subplots(1, len(pds))
+        
+        for ax, pd in zip(axs, pds):
+            pd.plot_gudhi(ax, cornerpoints = pd.cornerpoints,
+                        persistence_to_plot = pd.persistence_to_plot,
+                        coloring=coloring)
         if title is not None:
             plt.suptitle(title)
 
@@ -515,8 +559,7 @@ if __name__ == "__main__":
                ('h', 'f', 10)]
 
     graph = WeightedGraph(weighted_edges = example, nx_graph = None)
-    # graph.build_graph()
     graph.build_filtered_subgraphs()
     graph.get_eulerian_filtration()
     graph.steady_persistence()
-    graph.plot_steady_persistence_diagram()
+    graph.plot_persistence_diagram()

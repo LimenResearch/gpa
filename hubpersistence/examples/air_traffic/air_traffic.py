@@ -6,8 +6,7 @@ from hubpersistence.examples.air_traffic.read_data import *
 from hubpersistence.weighted_graph import WeightedGraph
 from hubpersistence.constants import STATIC_FOLDER
 
-def reproduce_thesis_figure(graph_structure_number = 2):
-    above_max_diagonal_gap = True
+def reproduce_thesis_figure(graph_structure_number=2, above_max_diagonal_gap=True):
     path_to_csv_1 = os.path.join(STATIC_FOLDER, "aux", "air_traffic", "dist_mat.csv")
     path_to_csv_2 = os.path.join(STATIC_FOLDER, "aux", "air_traffic", "freq_mat.csv")
     graph_structure = read_csv_distance_matrix(path_to_csv_1)
@@ -23,7 +22,7 @@ def reproduce_thesis_figure(graph_structure_number = 2):
     graph.build_filtered_subgraphs(weight_transform=identity)
     graph.get_temporary_hubs_along_filtration()
     # Steady
-    graph.steady_hubs_persistence(above_max_diagonal_gap=above_max_diagonal_gap,
+    graph.steady_persistence(above_max_diagonal_gap=above_max_diagonal_gap,
                                   gap_number=0)
     fig, ax = plt.subplots()
     graph.steady_pd.plot_gudhi(ax,
@@ -35,7 +34,7 @@ def reproduce_thesis_figure(graph_structure_number = 2):
     print ('steady hubs above gap:', graph.steady_pd.proper_cornerpoints_above_gap)
     pprint([(c.vertex, c.persistence) for c in graph.steady_pd.proper_cornerpoints])
     # Ranging
-    graph.ranging_hubs_persistence(above_max_diagonal_gap = above_max_diagonal_gap )
+    graph.ranging_persistence(above_max_diagonal_gap = above_max_diagonal_gap )
     fig, ax = plt.subplots()
     graph.steady_pd.plot_gudhi(ax,
             persistence_to_plot = graph.ranging_pd.persistence_to_plot)
