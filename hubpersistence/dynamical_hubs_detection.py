@@ -34,7 +34,9 @@ class TimeVaryingHubs(object):
 
 
 if __name__ == "__main__":
-    path_to_folder = 'data/literature/GOT/'
+    from hubpersistence.constants import DATA_FOLDER
+    
+    path_to_folder = os.path.join(DATA_FOLDER, "literature", "GOT")
     csv_files = ['1', '2', '3', '45']
     graphs = []
 
