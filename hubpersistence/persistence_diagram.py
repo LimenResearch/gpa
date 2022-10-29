@@ -2,7 +2,7 @@ import numpy as np
 from math import sqrt
 from collections import Counter
 import colorsys
-from hubpersistence.persistence.utils import plot_persistence_diagram
+from hubpersistence.utils import plot_persistence_diagram
 
 
 class CornerPoint:

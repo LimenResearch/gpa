@@ -1,15 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 from pprint import pprint
-from .read_data import *
-from ...weighted_graph import WeightedGraph
+from hubpersistence.examples.air_traffic.read_data import *
+from hubpersistence.weighted_graph import WeightedGraph
+from hubpersistence.constants import STATIC_FOLDER
 
 def reproduce_thesis_figure(graph_structure_number = 2):
     above_max_diagonal_gap = True
-    path_to_csv_1 = './MATRICE DISTANZE.csv'
-    path_to_csv_2 = './MATRICE FREQUENZE.csv'
+    path_to_csv_1 = os.path.join(STATIC_FOLDER, "aux", "air_traffic", "dist_mat.csv")
+    path_to_csv_2 = os.path.join(STATIC_FOLDER, "aux", "air_traffic", "freq_mat.csv")
     graph_structure = read_csv_distance_matrix(path_to_csv_1)
     graph_structure_2 = read_csv_frequencies_matrix(path_to_csv_2)
     graph_structure_1 = get_structure(graph_structure, graph_structure_2,
@@ -20,7 +20,7 @@ def reproduce_thesis_figure(graph_structure_number = 2):
                         graph_structure_3]
     graph = WeightedGraph(graph_structures[graph_structure_number])
     graph.build_graph()
-    graph.build_filtered_subgraphs(weight_transform=identity, sublevel=True)
+    graph.build_filtered_subgraphs(weight_transform=identity)
     graph.get_temporary_hubs_along_filtration()
     # Steady
     graph.steady_hubs_persistence(above_max_diagonal_gap=above_max_diagonal_gap,

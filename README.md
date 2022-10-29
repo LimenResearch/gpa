@@ -20,13 +20,13 @@ The following visualization is obtained through the beautiful implementation ava
 
 In the image dark blue vertices represent hubs for the Miserables' storyline.
 
-![](imgs/les_miserables.png)
+![](static/imgs/les_miserables.png)
 
 These hubs are found as cornerpoint of persistence diagram such as
 
 Steady hubs | Ranging hubs
 ------------|-------------
-![](imgs/pd_mis_steady.png) | ![](imgs/pd_mis_ranging.png)
+![](static/imgs/pd_mis_steady.png) | ![](static/imgs/pd_mis_ranging.png)
 
 Both the steady and ranging persistence functions identifies as hubs
 
@@ -37,7 +37,7 @@ Furthermore, by using the same cornerpoint selection strartegy based on diagonal
 
 Steady hubs | Ranging hubs
 ------------|-------------
-![](imgs/pd_mis_steady_gap.png) | ![](imgs/pd_mis_ranging_gap.png)
+![](static/imgs/pd_mis_steady_gap.png) | ![](static/imgs/pd_mis_ranging_gap.png)
 
 ## Getting Started
 
