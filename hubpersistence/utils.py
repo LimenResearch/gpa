@@ -1,19 +1,17 @@
-from __future__ import absolute_import, print_function, division
-from matplotlib import cm
-from itertools import chain, combinations, izip
+import os
+from itertools import chain, combinations
 import matplotlib.pyplot as plt
 import numpy as np
-import os
+import matplotlib
+from matplotlib import cm
+from collections import Counter
+
 
 def grouped(iterable, n):
     """Groups iterable by considering n consecutive elements
     """
-    return izip(*[iter(iterable)]*n)
+    return zip(*[iter(iterable)]*n)
 
-def get_n_colors(n, cmap = 'jet'):
-    RGB_tuples = cm.get_cmap(cmap)
-    colors = [RGB_tuples(i / n) for i in range(n)]
-    return colors
 
 def get_powerset_(l):
     """Returns the powerset built on the elements of l, excluding the empty set
@@ -90,7 +88,8 @@ def show_palette_values(alpha=0.6):
     return plt
 
 def plot_persistence_diagram(persistence=[], persistence_file='', alpha=0.6,
-                             band_boot=0., max_plots=0):
+                             band_boot=0., max_plots=0, cornerpoints = None,
+                             coloring = None):
     """This function plots the persistence diagram with an optional confidence band.
 
     :param persistence: The persistence to plot.
@@ -119,7 +118,8 @@ def plot_persistence_diagram(persistence=[], persistence_file='', alpha=0.6,
 
     if max_plots > 0 and max_plots < len(persistence):
         # Sort by life time, then takes only the max_plots elements
-        persistence = sorted(persistence, key=lambda life_time: life_time[1][1]-life_time[1][0], reverse=True)[:max_plots]
+        persistence = sorted(persistence, key=lambda life_time:
+                             life_time[1][1]-life_time[1][0], reverse=True)[:max_plots]
 
     (min_birth, max_death) = __min_birth_max_death(persistence, band_boot)
     ind = 0
@@ -135,33 +135,63 @@ def plot_persistence_diagram(persistence=[], persistence_file='', alpha=0.6,
     # bootstrap band
     if band_boot > 0.:
         plt.fill_between(x, x, x+band_boot, alpha=alpha, facecolor='red')
+    if cornerpoints is not None:
+        reversed_cornerpoints = reversed(cornerpoints)
+    else:
+        reversed_cornerpoints = [None] * len(persistence)
 
     # Draw points in loop
-    for interval in reversed(persistence):
+    for interval, cp in zip(reversed(persistence), reversed_cornerpoints):
+        print("plotting ", interval)
+        if coloring is None or cp is None:
+            color = palette[interval[0]]
+            label = None
+        else:
+            color, label = get_color_from_cornerpoint(cp, coloring)
+        print("color: ", color)
+        print("label: ", label)
         if float(interval[1][1]) != float('inf'):
-            # Finite death case
-            plt.scatter(interval[1][0], interval[1][1], alpha=alpha,
-                        color = palette[interval[0]])
+            print("finite death")
+            print("interval: ", interval[1][0], interval[1][1])
+            plt.plot(interval[1][0], interval[1][1], alpha=alpha,
+                        color = color, label=label, marker='o')
             plt.plot([interval[1][0],interval[1][0]],[interval[1][1], interval[1][0]],
-                     color = palette[interval[0]], alpha = alpha/2,
+                     color = color, alpha = alpha/2,
                      linestyle="dashed")
             plt.plot([interval[1][0],interval[1][1]],[interval[1][1], interval[1][1]],
-                     color = palette[interval[0]], alpha = alpha/2,
+                     color = color, alpha = alpha/2,
                      linestyle="dashed")
         else:
-            # Infinite death case for diagram to be nicer
-            plt.scatter(interval[1][0], infinity, alpha=alpha,
-                        color = palette[interval[0]])
+            print("infinte death")
+            print("interval: ", interval[1][0], infinity)
+            plt.plot(interval[1][0], infinity, alpha=alpha,
+                        color = color, label=label, marker='o')
             plt.plot([interval[1][0],interval[1][0]],[interval[1][0], infinity],
-                     color = palette[interval[0]], alpha = alpha)
+                     color = color, alpha = alpha)
         ind = ind + 1
 
     plt.title('Persistence diagram')
     plt.xlabel('Birth')
     plt.ylabel('Death')
+    if coloring is not None:
+        plt.legend()
     # Ends plot on infinity value and starts a little bit before min_birth
     plt.axis([axis_start, infinity, axis_start, infinity + delta])
     return plt
+
+
+def get_color_from_cornerpoint(cp, coloring):
+    try:
+        room_count = Counter([v[0] for v in cp.vertex])
+    except:
+        room_count = Counter([v for v in cp.vertex])
+    print("room count ", room_count)
+    color = np.sum([np.asarray(coloring[int(room)]) * room_count[room] / len(cp.vertex)
+                   for room in room_count], axis=0)
+    label = str(list(room_count.keys()))
+    return color, label
+
+
 
 if __name__ == "__main__":
     ### get_powerset_

@@ -1,12 +1,11 @@
-from __future__ import division, absolute_import, print_function
 import numpy as np
-import numpy.ma as mask
 from math import sqrt
 from collections import Counter
 import colorsys
-from hubpersistence.utils import plot_persistence_diagram
+from rank_persistence.persistence.utils import plot_persistence_diagram
 
-class CornerPoint(object):
+
+class CornerPoint:
     """A point of a persistence diagram
 
     Attributes
@@ -22,12 +21,13 @@ class CornerPoint(object):
         for hubs persistence the vertex of class of vertices represented by the
         cornerpoint
     """
-    def __init__(self, k, birth, death, vertex = None):
+    def __init__(self, k, birth, death, vertex = None, color=None):
         self.k = k
         self.birth = birth if birth <= death else death
         self.death = death if death >= birth else birth
         self.persistence = abs(death - birth)
         self.vertex = vertex
+        self.color = color
         self.above_the_gap = False
 
     @property
@@ -43,21 +43,19 @@ class CornerPoint(object):
         return self.persistence != np.inf
 
     def __eq__(self, other):
-        """Short summary.
-
-        Parameters
-        ----------
-        other : <CornerPoint>
-            An instance of the class cornerpint
-
-        Returns
-        -------
-        bool
-            True if self and other are the same cornerpoint
-
+        """True if self and other are the same cornerpoint
         """
 
-        return self.__dict__ == other.__dict__
+        return self.birth == other.birth and self.death == other.death
+
+    def __hash__(self):
+        return hash((self.k, self.birth, self.death, self.persistence))
+
+    def __repr__(self):
+        return "Birth: {}\nDeath: {}\nVertices: {}".format(self.birth,
+                                                           self.death,
+                                                           self.vertex)
+
 
 class PersistenceDiagram(object):
     """A persistence diagram is a multiset of 2-dimensional points called
@@ -86,10 +84,21 @@ class PersistenceDiagram(object):
             self.get_cornerpoints_multiset()
             self.get_persistence_from_cornerpoints()
 
+
+    def get_cornerpoints(self, proper = True):
+        if proper:
+            self.get_proper_cornerpoints()
+            cps = self.proper_cornerpoints
+        else:
+            cps = self.cornerpoints
+        return np.asarray([[c.birth, c.death] for c in cps])
+
+
     def compute_persistence(self):
         """Uses gudhi wrappers to compute the persistence of a filtered complex
         """
         self.persistence = self.filtered_complex.persistence()
+
 
     def get_persistence_diagram(self, ax_handle = None):
         """Gets the persistence diagram through gudhi wrappers
@@ -100,18 +109,29 @@ class PersistenceDiagram(object):
         if ax_handle is not None:
             self.plot_gudhi(ax_handle)
 
+
     def get_persistence_from_cornerpoints(self):
         """Gets persistence in gudhi format from self.cornerpoints
         """
-        self.persistence_to_plot = [(c.k, (c.birth, c.death)) for c in self.cornerpoints]
+        self.persistence_to_plot = [(c.k, (c.birth, c.death))
+                                    for c in self.cornerpoints]
 
-    def plot_gudhi(self, ax_handle, persistence_to_plot = None):
+
+    def plot_gudhi(self, ax_handle, cornerpoints, persistence_to_plot = None,
+                   coloring=None):
         """plots the persistence diagram in ax_handle
+
+        coloring : list
+            if not None, is the list of colors to be used on the
+            persistence diagram's points.
         """
         if persistence_to_plot is None:
             persistence_to_plot = self.persistence
-        ax_handle = plot_persistence_diagram(persistence_to_plot)
+        ax_handle = plot_persistence_diagram(persistence_to_plot,
+                                             cornerpoints = cornerpoints,
+                                             coloring = coloring)
         return ax_handle
+
 
     def get_cornerpoint_objects(self):
         """Creates a list of CornerPoint instances
@@ -120,6 +140,7 @@ class PersistenceDiagram(object):
         self.cornerpoints.sort(key=lambda x: x.persistence)
         self.get_cornerpoints_multiset()
 
+
     def get_cornerpoints_multiset(self):
         """Organises cornerpoints as a multiset in the form
         cornerpoint : multiplicity and generate as many colors as cornerpoints
@@ -127,7 +148,8 @@ class PersistenceDiagram(object):
 
         """
         self.cornerpoints_multiset = Counter(self.cornerpoints)
-        self.colors = self.generate_n_distinct_colors(len(self.cornerpoints_multiset))
+        self.colors = generate_n_distinct_colors(len(self.cornerpoints_multiset))
+
 
     def get_proper_cornerpoints(self):
         """Gets the list of proper cornerpoints (the ones with persistence
@@ -136,6 +158,7 @@ class PersistenceDiagram(object):
         self.proper_cornerpoints = [c for c in self.cornerpoints_multiset
                                             if c.is_proper and not np.isnan(c.persistence)]
         self.proper_cornerpoints.sort(key=lambda x: x.persistence)
+
 
     def get_nth_widest_gap(self, n = 0):
         """Computes the widest gap according to the definition originally given
@@ -162,6 +185,7 @@ class PersistenceDiagram(object):
         [setattr(c, 'above_the_gap', True) for c in self.proper_cornerpoints_above_gap]
         return self.proper_cornerpoints[dg_index], self.proper_cornerpoints[dg_index + 1]
 
+
     def get_n_most_persistent_cornerpoints(self, n):
         """Get the first n cornerpoints according to their poersistence
         """
@@ -169,6 +193,7 @@ class PersistenceDiagram(object):
             self.get_proper_cornerpoints()
         self.proper_cornerpoints_reversed = self.proper_cornerpoints[::-1]
         return self.proper_cornerpoints[: n + 1]
+
 
     def plot_nth_widest_gap(self, ax_handle = None, n = 0):
         """Plots the widest gap on the persistence diagram already plotted in
@@ -188,6 +213,7 @@ class PersistenceDiagram(object):
         ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n/10%10!=1)*(n%10<4)*n%10::4])
         ax_handle.set_title("Visualizing the {} widest gap".format(ordinal(n)))
 
+
     def mark_points_above_diagonal_gaps(self, ax_handle):
         """Marks the points above the widest gap by circling them in red
         """
@@ -195,9 +221,9 @@ class PersistenceDiagram(object):
             ax_handle.plot(c.birth, c.death, 'o', ms=14, markerfacecolor="None",
              markeredgecolor='red', markeredgewidth=5)
 
-    @staticmethod
-    def generate_n_distinct_colors(n):
-        """Generates n distinct colors
-        """
-        HSV_tuples = [(i * 1.0 / n, 0.5, 0.5) for i in range(n)]
-        return map(lambda x: colorsys.hsv_to_rgb(*x), HSV_tuples)
+
+def generate_n_distinct_colors(n):
+    """Generates n distinct colors
+    """
+    hsv_tuples = [(i * 1.0 / n, 0.5, 0.5) for i in range(n)]
+    return map(lambda x: colorsys.hsv_to_rgb(*x), hsv_tuples)

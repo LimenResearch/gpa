@@ -17,11 +17,13 @@
 #
 # For more information please send an email (mattiagbergomi@gmail.com).
 #
+
 import os
 import sys
 from distutils.sysconfig import get_python_lib
 from setuptools import find_packages, setup
 import subprocess
+import pathlib
 
 CURRENT_PYTHON = sys.version_info[:2]
 REQUIRED_PYTHON = (2, 7)
@@ -35,13 +37,7 @@ install it on Python {}.{}.
 """.format(*(REQUIRED_PYTHON + CURRENT_PYTHON)))
     sys.exit(1)
 
-requirements = ['Cython==0.27.3',
-                'matplotlib==2.2.0',
-                'networkx==2.1',
-                'numpy==1.14.2',
-                'pandas==0.22.0',
-                'scipy==1.0.0',
-                'seaborn==0.8.1']
+requirements = (pathlib.Path(__file__).parent / "requirements.txt").read_text().splitlines()
 EXCLUDE_FROM_PACKAGES = []
 
 setup(
