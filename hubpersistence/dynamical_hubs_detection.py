@@ -22,8 +22,8 @@ class TimeVaryingHubs(object):
 
     def compute_persistence(self, persistence_function = "steady"):
         self.persistence_function = persistence_function
-        [graph.steady_hubs_persistence() if persistence_function == "steady" else
-         graph.ranging_hubs_persistence() for graph in self.graphs]
+        [graph.steady_persistence() if persistence_function == "steady" else
+         graph.ranging_persistence() for graph in self.graphs]
 
     @staticmethod
     def compute_filtration(graph):
@@ -32,43 +32,6 @@ class TimeVaryingHubs(object):
         graph.get_temporary_hubs_along_filtration()
         return graph
 
-    def export_csv_for_plot(self, save_as = None):
-        info_dicts = [self.get_structure(graph, i) for i, graph in
-                      enumerate(self.graphs)]
-        #get union of the vertices
-        vertices_in_time = set().union(*[d["vertex"] for d in info_dicts])
-
-        for j, d in enumerate(info_dicts):
-            V = set(d["vertex"])
-            for v in vertices_in_time:
-                if v not in V:
-                    d["vertex"].append(v)
-                    d["observation"].append(j)
-                    d["persistence"].append(0)
-        info_dict = info_dicts[0]
-
-        for d in info_dicts[1:]:
-            for k in info_dict:
-                info_dict[k].extend(d[k])
-
-        data_frame = pd.DataFrame(info_dict)
-        if save_as is None:
-            save_as = './test.csv'
-
-        data_frame.to_csv(save_as, index = False)
-
-    def get_structure(self, graph, index):
-        if self.persistence_function == "steady":
-            nodes_color_map,\
-            nodelist,\
-            node_size, cornerpoints = graph.plot_steady_persistence_diagram(return_attr = True)
-        elif self.persistence_function == "ranging":
-            nodes_color_map,\
-            nodelist,\
-            node_size, cornerpoints = graph.plot_ranging_persistence_diagram(return_attr = True)
-        return graph.export_graph_and_hubs_as_dict(nodes_color_map, nodelist,
-                                                   node_size, cornerpoints,
-                                                   observation = index)
 
 if __name__ == "__main__":
     path_to_folder = 'data/literature/GOT/'
@@ -82,4 +45,3 @@ if __name__ == "__main__":
 
     tvg = TimeVaryingHubs(graphs)
     tvg.compute_persistence(persistence_function = "ranging")
-    tvg.export_csv_for_plot(save_as = './got_dynamical_ranging.csv')
