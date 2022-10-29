@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function
-import sys
-sys.path.append('../')
-from sys import platform
-if platform == "darwin":
-    import matplotlib
-    matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import numpy as np
 from pprint import pprint
-from hubpersistence.air_traffic_Antonella.read_data_from_csv_for_air_traffic import *
+from hubpersistence.examples.air_traffic.read_data import *
 from hubpersistence.weighted_graph import WeightedGraph
 
 def reproduce_thesis_figure(graph_structure_number = 2):
@@ -40,7 +33,6 @@ def reproduce_thesis_figure(graph_structure_number = 2):
         graph.steady_pd.mark_points_above_diagonal_gaps(ax)
     plt.show()
     print ('steady hubs above gap:', graph.steady_pd.proper_cornerpoints_above_gap)
-    from pprint import pprint
     pprint([(c.vertex, c.persistence) for c in graph.steady_pd.proper_cornerpoints])
     # Ranging
     graph.ranging_hubs_persistence(above_max_diagonal_gap = above_max_diagonal_gap )

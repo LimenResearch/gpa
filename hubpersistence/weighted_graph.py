@@ -6,9 +6,9 @@ if platform.system() == "Darwin":
     matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from itertools import chain
-from rank_persistence.persistence.utils import get_powerset_, get_supersets
-from rank_persistence.persistence.persistence_diagram import CornerPoint
-from rank_persistence.persistence.persistence_diagram import PersistenceDiagram
+from hubpersistence.utils import get_powerset_, get_supersets
+from hubpersistence.persistence_diagram import CornerPoint
+from hubpersistence.persistence_diagram import PersistenceDiagram
 
 class PersistentEdgeBlock:
     def __init__(self, subgraph):
