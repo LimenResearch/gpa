@@ -16,7 +16,7 @@ See [slideshow on persistent hubs (UMI-SIMAI-PTM joint meeting Wroclaw-2018)](ht
 
 Here we consider the standard dataset provided by the weighted graph built by considering the characters co-occurrences in [Les Miserables](https://en.wikipedia.org/wiki/Les_Mis%C3%A9rables).
 
-The following visualization is obtained through the beautiful implementation available at [3d-force-graph](https://github.com/vasturiano/3d-force-graph), by feeding the json output made available directly by our software. See the  [example folder](./perscomb/examples)
+The following visualization is obtained through the beautiful implementation available at [3d-force-graph](https://github.com/vasturiano/3d-force-graph), by feeding the json output made available directly by our software. See the  [example folder](./huberpsistence/examples)
 
 In the image dark blue vertices represent hubs for the Miserables' storyline.
 
@@ -81,21 +81,21 @@ http://virtualenvwrapper.readthedocs.io/en/latest/install.html
 Proceed creating and activating the virtual environment by typing
 
 ```
-mkvirtualenv perscomb --system-site-packages
-workon perscomb
+mkvirtualenv huberpsistence
+workon huberpsistence
 ```
 
 Now your terminal should look like
 
 ```
-(perscomb) machine:location user$
+(huberpsistence) machine:location user$
 ```
 
 In the virtual environment run the following commands
 
 ```
-git clone http://gitlab.com/mattia.bergomi/perscomb.git
-cd perscomb
+git clone http://gitlab.com/mattia.bergomi/huberpsistence.git
+cd huberpsistence
 pip install -e ./
 ```
 
