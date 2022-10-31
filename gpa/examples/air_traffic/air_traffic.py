@@ -2,9 +2,9 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from pprint import pprint
-from hubpersistence.examples.air_traffic.read_data import *
-from hubpersistence.weighted_graph import WeightedGraph
-from hubpersistence.constants import STATIC_FOLDER
+from gpa.examples.air_traffic.read_data import *
+from gpa.weighted_graph import WeightedGraph
+from gpa.constants import STATIC_FOLDER
 
 def reproduce_thesis_figure(graph_structure_number=2, above_max_diagonal_gap=True):
     path_to_csv_1 = os.path.join(STATIC_FOLDER, "aux", "air_traffic", "dist_mat.csv")

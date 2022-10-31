@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from hubpersistence.read_data_from_csv import read_csv_distance_matrix
-from hubpersistence.weighted_graph import WeightedGraph
+from gpa.read_data_from_csv import read_csv_distance_matrix
+from gpa.weighted_graph import WeightedGraph
 import seaborn as sns
 sns.set()
 
@@ -13,7 +13,7 @@ def minus(array):
     return -array
 
 if __name__ == "__main__":
-    from hubpersistence.constants import DATA_FOLDER
+    from gpa.constants import DATA_FOLDER
     path_to_csv = '/Users/mattiagiuseppebergomi/Desktop/perscomb/code/cornerpoint_selection/data/transportation/Airports.csv'
     graph_structure = read_csv_distance_matrix(path_to_csv)
 

@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from pprint import pprint
-from hubpersistence.read_data_from_csv import read_graph_structure_from_csv
-from hubpersistence.weighted_graph import WeightedGraph
-from hubpersistence.constants import DATA_FOLDER
+from gpa.read_data_from_csv import read_graph_structure_from_csv
+from gpa.weighted_graph import WeightedGraph
+from gpa.constants import DATA_FOLDER
 
 
 def reproduce_thesis_figure(above_max_diagonal_gap = True):

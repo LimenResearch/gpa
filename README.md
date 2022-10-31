@@ -1,4 +1,4 @@
-# Combinatorial Persistence
+# Generalized Persistence
 
 Topological persistence (persistent homology) can be extended to the study of combinatorial objects such as weighted graphs. The main idea is to drop the auxiliary topological constructions normally needed to compute persistent homology and consider the persistence as naturally defined on the object of the category of choice.
 

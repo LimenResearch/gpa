@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-from hubpersistence.read_data_from_csv import read_graph_structure_from_csv
-from hubpersistence.weighted_graph import WeightedGraph
+from gpa.read_data_from_csv import read_graph_structure_from_csv
+from gpa.weighted_graph import WeightedGraph
 
 class TimeVaryingHubs(object):
     """Computes hubs for a graph time series and plots the resulting dynamical
@@ -34,7 +34,7 @@ class TimeVaryingHubs(object):
 
 
 if __name__ == "__main__":
-    from hubpersistence.constants import DATA_FOLDER
+    from gpa.constants import DATA_FOLDER
     
     path_to_folder = os.path.join(DATA_FOLDER, "literature", "GOT")
     csv_files = ['1', '2', '3', '45']

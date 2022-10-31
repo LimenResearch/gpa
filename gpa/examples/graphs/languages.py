@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from pprint import pprint
-from hubpersistence.read_data_from_csv import read_csv_distance_matrix
-from hubpersistence.weighted_graph import WeightedGraph
-from hubpersistence.constants import DATA_FOLDER
+from gpa.read_data_from_csv import read_csv_distance_matrix
+from gpa.weighted_graph import WeightedGraph
+from gpa.constants import DATA_FOLDER
 
 
 def opp(array):

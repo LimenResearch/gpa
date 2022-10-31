@@ -1,7 +1,7 @@
 # Copyright (C) 2022-Mattia G. Bergomi, Massimo Ferri, Antonella Tavaglione,
 # Lorenzo Zuffi
 #
-# hubpersistence is free software: you can redistribute it and/or modify
+# gpa is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -32,7 +32,7 @@ if CURRENT_PYTHON < REQUIRED_PYTHON:
 ==========================
 Unsupported Python version
 ==========================
-This version of hubpersistence requires Python {}.{}, but you're trying to
+This version of gpa requires Python {}.{}, but you're trying to
 install it on Python {}.{}.
 """.format(*(REQUIRED_PYTHON + CURRENT_PYTHON)))
     sys.exit(1)
@@ -41,7 +41,7 @@ requirements = (pathlib.Path(__file__).parent / "requirements.txt").read_text().
 EXCLUDE_FROM_PACKAGES = []
 
 setup(
-    name='hubpersistence',
+    name='gpa',
     version='0.0.0-prealpha',
     python_requires='>={}.{}'.format(*REQUIRED_PYTHON),
     url='',

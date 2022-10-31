@@ -2,9 +2,9 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 from itertools import chain
-from hubpersistence.utils import get_powerset_, get_supersets
-from hubpersistence.persistence_diagram import CornerPoint
-from hubpersistence.persistence_diagram import PersistenceDiagram
+from gpa.utils import get_powerset_, get_supersets
+from gpa.persistence_diagram import CornerPoint
+from gpa.persistence_diagram import PersistenceDiagram
 
 class PersistentEdgeBlock:
     def __init__(self, subgraph):
