@@ -21,11 +21,11 @@ The WeightedGraph class allows for computing
 3. Edge block, and
 4. Temporary hub
 
-filtrations computed with repsect to a transformation of the weights associated with the input graph's edges.
+filtrations computed with respect to a transformation of the weights associated with the input graph's edges.
 
 ### Steady and Ranging persistence
 
-Compute the persistence according to the steady (a properties holding true along subsequent sublevel sets) and ranging (maximum span of a property being true along the filtration) paradigms.
+Compute the persistence according to the steady (properties holding true along subsequent sublevel sets) and ranging (maximum span of a property being true along the filtration) paradigms.
 
 
 ### Visualization and cornerpoint selection
