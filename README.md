@@ -117,7 +117,7 @@ In the virtual environment run the following commands
 
 ```
 git clone 
-cd gap
+cd gpa
 pip install -e ./
 ```
 
