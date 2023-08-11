@@ -1,4 +1,3 @@
-from __future__ import absolute_import, print_function, division
 import pandas as pd
 import itertools
 
@@ -18,11 +17,16 @@ def read_csv_distance_matrix(path_to_csv, skip_character = -1):
 
     return graph_structure
 
+
+def read_graph_as_df(path_to_csv, sep=",", **kwargs):
+    return pd.read_csv(path_to_csv, sep = sep, **kwargs)
+
+
 def read_graph_structure_from_csv(path_to_csv, sep = ";"):
-    d = pd.read_csv(path_to_csv, sep = sep)
+    d = read_graph_as_df(path_to_csv, sep = sep)
 
     graph_structure = []
-    for index, row in d.iterrows():
+    for _, row in d.iterrows():
         graph_structure.append(tuple([row[0], row[1], row[2]]))
 
     return graph_structure

@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 from itertools import chain
 from gpa.utils import get_powerset_, get_supersets
 from gpa.persistence_diagram import CornerPoint
@@ -62,7 +63,7 @@ class WeightedGraph:
         labels associated to the vertices on the boundary of the edge and w12
         is its weight.
     """
-    def __init__(self, weighted_edges = None, nx_graph = None):
+    def __init__(self, weighted_edges = None, nx_graph = None, is_directed=False):
         if nx_graph is not None:
             self.G = nx_graph
         elif weighted_edges is not None:
@@ -71,6 +72,7 @@ class WeightedGraph:
         else:
             raise ValueError("Specify graph either as a list of weighted edges,"
                              + " or as a networkx graph")
+        self.is_directed = is_directed
 
     def build_graph(self):
         """Builds the graph defined by the collection of weighted edges
@@ -97,7 +99,7 @@ class WeightedGraph:
 
 
     def evaluate_weight_transform_and_set_on_edges(self, subgraph,
-                                                        weight_transform):
+                                                   weight_transform):
         """Creates a dictionary edge: value_of_the_weight_transform.
 
         Notes
@@ -135,13 +137,12 @@ class WeightedGraph:
                     if self.transformed_edges_dict[edge] <= value]
 
 
-    @staticmethod
-    def get_subgraph(edges):
+    def get_subgraph(self, edges):
         """Returns the subgraph defined by edges. Once the filtration is
         generated we are only interested in the 'hubbiness' of a
         subgraph.
         """
-        H = nx.Graph()
+        H = nx.Graph() if not self.is_directed else nx.DiGraph()
         [H.add_edge(v1, v2, weight =  np.round(w12, decimals = 2))
          for v1, v2, w12 in edges]
         return H
@@ -181,6 +182,62 @@ class WeightedGraph:
                                         for neighbouring_node in subgraph[node]]
 
         return max(degrees_neighbouring_nodes) < degree_node
+    
+    def is_source(self, subgraph, node, weighted = True):
+        in_edges = subgraph.in_edges(node)
+        out_edges = subgraph.out_edges(node)
+        if not weighted:
+            return out_edges > in_edges
+        else:
+            weights = nx.get_edge_attributes(subgraph, "weight")
+            in_weight = sum([weights[e] for e in in_edges])
+            out_weight = sum([weights[e] for e in out_edges])
+            return out_weight > in_weight
+        
+    def is_sink(self, subgraph, node, weighted=True):
+        in_edges = subgraph.in_edges(node)
+        out_edges = subgraph.out_edges(node)
+        if not weighted:
+            return out_edges < in_edges
+        else:
+            weights = nx.get_edge_attributes(subgraph, "weight")
+            in_weight = sum([weights[e] for e in in_edges])
+            out_weight = sum([weights[e] for e in out_edges])
+            return out_weight < in_weight
+    
+
+        
+    def get_vertex_feature_along_filtration(self, weighted=True, feature_name="sources"):
+        if feature_name == "sources": 
+            func = self.get_sources
+        elif feature_name == "sinks":
+            func= self.get_sinks
+        else:
+            raise NotImplementedError("sources and sinks are the only implemented features")
+        
+        self.filtered_sources = {i: func(subgraph=g, weighted=weighted)
+                                 for i, g in enumerate(tqdm(self.filtration))}
+        cornerpoint_vertices = self.get_list_of_unique_vertices(self.filtered_sources)
+        self.cornerpoint_vertices = cornerpoint_vertices
+        self.persistence = {i: [k for k in self.filtered_sources
+                                if cornerpoint_vertex in self.filtered_sources[k]]
+                                for i, cornerpoint_vertex in enumerate(cornerpoint_vertices)}
+        self.persistence = {key: value for key, value in self.persistence.items()
+                            if len(value) >= 1}
+    
+    def get_sources(self, subgraph=None, weighted=True):
+        if subgraph is None:
+            subgraph = self.G
+        return [node for node in tqdm(list(subgraph.nodes))
+                if (self.is_source(subgraph, node, weighted=weighted) and
+                    len(subgraph[node]) > 1)]
+        
+    def get_sinks(self, subgraph=None, weighted=True):
+        if subgraph is None:
+            subgraph = self.G
+        return [node for node in tqdm(list(subgraph.nodes))
+                if (self.is_sink(subgraph, node, weighted=weighted) and
+                len(subgraph[node]) > 1)]   
 
     def get_t_hubs(self, subgraph = None):
         """Returns the list of the t_hubs in a subgraph. Typically subgraph is
@@ -391,7 +448,6 @@ class WeightedGraph:
         self.steady_cornerpoints = []
 
         for vertices in self.persistence:
-            print("vertices: ", vertices)
             pers = self.persistence[vertices]
             max_steady_pers = self.get_maximum_steady_persistence(pers)
             births = [min(c) for c in max_steady_pers]

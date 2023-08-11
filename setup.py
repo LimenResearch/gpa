@@ -1,5 +1,5 @@
-# Copyright (C) 2022-Mattia G. Bergomi, Massimo Ferri, Antonella Tavaglione,
-# Lorenzo Zuffi
+# Copyright (C) 2022-Mattia G. Bergomi, Massimo Ferri, Pietro Vertechi, 
+# Antonella Tavaglione, Lorenzo Zuffi
 #
 # gpa is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,11 +18,8 @@
 # For more information please send an email (mattiagbergomi@gmail.com).
 #
 
-import os
 import sys
-from distutils.sysconfig import get_python_lib
 from setuptools import find_packages, setup
-import subprocess
 import pathlib
 
 CURRENT_PYTHON = sys.version_info[:2]
@@ -42,10 +39,10 @@ EXCLUDE_FROM_PACKAGES = []
 
 setup(
     name='gpa',
-    version='0.0.0-prealpha',
+    version='0.1.0',
     python_requires='>={}.{}'.format(*REQUIRED_PYTHON),
     url='',
-    author='Mattia G. Bergomi, Massimo Ferri, Antonella Tavaglione, Lorenzo Zuffi',
+    author='Mattia G. Bergomi, Massimo Ferri, Antonella Tavaglione, Pietro Vertechi, Lorenzo Zuffi',
     author_email='mattiagbergomi@gmail.com',
     description=(''),
     license='GNU General Public License v3 or later (GPLv3+)',

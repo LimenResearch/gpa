@@ -1,6 +1,6 @@
 import os
-import hubpersistence
+import gpa
 
-STATIC_FOLDER = os.path.join(os.path.dirname(os.path.dirname(gpa.__file__)),
-                             "static")
+MAIN_FOLDER = os.path.dirname(os.path.dirname(gpa.__file__))
+STATIC_FOLDER = os.path.join(MAIN_FOLDER, "static")
 DATA_FOLDER = os.path.join(STATIC_FOLDER, "data")
