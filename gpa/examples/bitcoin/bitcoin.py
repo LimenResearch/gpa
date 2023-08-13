@@ -32,7 +32,8 @@ def get_boxplot(gt, g, ax=None):
     per_df = pd.DataFrame.from_dict({
         "persistence": 
         [c.persistence for c in trusted]+[c.persistence for c in fraudulent], 
-        "trusted":[True for _ in trusted]+[False for _ in fraudulent]
+        "trusted":[True for _ in trusted]+[False for _ in fraudulent],
+        "nodes": [c.vertex for c in trusted]+[c.vertex for c in fraudulent], 
         })
     per_df.replace([np.inf, -np.inf], 
                    np.nanmax(per_df[per_df.persistence!=np.inf].persistence) + 1,
@@ -42,6 +43,7 @@ def get_boxplot(gt, g, ax=None):
                            "markerfacecolor":"white",
                            "markeredgecolor":"black",
                            "markersize":"10"})
+    return per_df
     
     
 
@@ -56,23 +58,27 @@ if __name__ == '__main__':
         return -array
     
     def max_(array):
-        array = array + np.min(array)
+        array = array + np.abs(np.min(array))
         return np.max(array) - array
+    
+    def make_positive(array):
+        return array + np.min(array)
     
     net_path = os.path.join(DATA_FOLDER, "fintech", "data", "alpha", "alpha_network.csv")
     gt_path = os.path.join(DATA_FOLDER, "fintech", "data", "alpha", "alpha_gt.csv")
     graph, gt = get_data(net_path, gt_path)
-    g = WeightedGraph(nx_graph=graph, is_directed=True)
-    g.build_filtered_subgraphs(weight_transform=identity)
-    g.get_vertex_feature_along_filtration(weighted=True, feature_name="sources")
-    g.steady_persistence()
+    # g = WeightedGraph(nx_graph=graph, is_directed=True)
+    # g.build_filtered_subgraphs(weight_transform=max_)
+    # g.get_vertex_feature_along_filtration(weighted=True, feature_name="sources")
+    # g.steady_persistence()
     
     h = WeightedGraph(nx_graph=graph, is_directed=True)
     h.build_filtered_subgraphs(weight_transform=max_)
     h.get_vertex_feature_along_filtration(weighted=True, feature_name="sinks")
     h.steady_persistence()
     
-    f,axs = plt.subplots(1,2)
-    get_boxplot(gt, g, ax=axs[0])
-    get_boxplot(gt, h, ax=axs[1])
+    # f,axs = plt.subplots(1,2)
+    # per_df_g = get_boxplot(gt, g, ax=axs[0])
+    f, ax = plt.subplots()
+    per_df_h = get_boxplot(gt, h, ax=ax)
     
