@@ -57,6 +57,11 @@ if __name__ == '__main__':
     def opp(array):
         return -array
     
+    def max_2(array):
+        array = array + np.abs(np.min(array))
+        return np.max(array) - array
+    
+       
     def max_(array):
         array = array + np.abs(np.min(array))
         return np.max(array) - array
@@ -64,8 +69,14 @@ if __name__ == '__main__':
     def make_positive(array):
         return array + np.min(array)
     
-    net_path = os.path.join(DATA_FOLDER, "fintech", "data", "alpha", "alpha_network.csv")
-    gt_path = os.path.join(DATA_FOLDER, "fintech", "data", "alpha", "alpha_gt.csv")
+    
+    # OTC
+    net_path = os.path.join(DATA_FOLDER, "fintech", "data", "otc", "otc_network.csv")
+    gt_path = os.path.join(DATA_FOLDER, "fintech", "data", "otc", "otc_gt.csv")
+    # # Alpha
+    # net_path = os.path.join(DATA_FOLDER, "fintech", "data", "alpha", "alpha_network.csv")
+    # gt_path = os.path.join(DATA_FOLDER, "fintech", "data", "alpha", "alpha_gt.csv")
+    
     graph, gt = get_data(net_path, gt_path)
     # g = WeightedGraph(nx_graph=graph, is_directed=True)
     # g.build_filtered_subgraphs(weight_transform=max_)
