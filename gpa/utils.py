@@ -1,9 +1,6 @@
 import os
 from itertools import chain, combinations
-import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib
-from matplotlib import cm
 from collections import Counter
 
 
@@ -70,12 +67,13 @@ palette = ['#ff0000', '#00ff00', '#0000ff', '#00ffff', '#ff00ff', '#ffff00',
            '#008888']
 
 def show_palette_values(alpha=0.6):
-    """This function shows palette color values in function of the dimension.
+    r"""This function shows palette color values in function of the dimension.
 
     :param alpha: alpha value in [0.0, 1.0] for horizontal bars (default is 0.6).
     :type alpha: float.
     :returns: plot the dimension palette values.
     """
+    import matplotlib.pyplot as plt
     colors = []
     for color in palette:
         colors.append(color)
@@ -90,7 +88,7 @@ def show_palette_values(alpha=0.6):
 def plot_persistence_diagram(persistence=[], persistence_file='', alpha=0.6,
                              band_boot=0., max_plots=0, cornerpoints = None,
                              coloring = None):
-    """This function plots the persistence diagram with an optional confidence band.
+    r"""This function plots the persistence diagram with an optional confidence band.
 
     :param persistence: The persistence to plot.
     :type persistence: list of tuples(dimension, tuple(birth, death)).
@@ -104,7 +102,8 @@ def plot_persistence_diagram(persistence=[], persistence_file='', alpha=0.6,
     :type max_plots: int.
     :returns: plot -- A diagram plot of persistence.
     """
-    if persistence_file is not '':
+    import matplotlib.pyplot as plt
+    if persistence_file != '':
         if os.path.isfile(persistence_file):
             # Reset persistence
             persistence = []

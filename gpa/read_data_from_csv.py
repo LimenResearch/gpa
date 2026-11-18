@@ -12,8 +12,8 @@ def read_csv_distance_matrix(path_to_csv, skip_character = -1):
 
     graph_structure = []
     for pair in itertools.combinations(dd.columns, r = 2):
-        if dd[pair[0]][pair[1]] != skip_character:
-            graph_structure.append(pair + tuple([dd[pair[0]][pair[1]]]))
+        if dd.loc[pair[1], pair[0]] != skip_character:
+            graph_structure.append(pair + tuple([dd.loc[pair[1], pair[0]]]))
 
     return graph_structure
 
@@ -27,6 +27,6 @@ def read_graph_structure_from_csv(path_to_csv, sep = ";"):
 
     graph_structure = []
     for _, row in d.iterrows():
-        graph_structure.append(tuple([row[0], row[1], row[2]]))
+        graph_structure.append(tuple([row.iloc[0], row.iloc[1], row.iloc[2]]))
 
     return graph_structure

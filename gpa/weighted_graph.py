@@ -1,6 +1,5 @@
 import numpy as np
 import networkx as nx
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 from itertools import chain
 from gpa.utils import get_powerset_, get_supersets
@@ -480,7 +479,9 @@ class WeightedGraph:
             death = max(pers)
             if len(pers) == 1:
                 death = birth + 1
-            death = np.inf if death == len(self.filtration)-1 else self.transformed_edges[death]
+            # >=: a vertex alive only at the last level has death = birth + 1,
+            # one past the end (IndexError before); it is alive at the end.
+            death = np.inf if death >= len(self.filtration)-1 else self.transformed_edges[death]
             c = CornerPoint(0,
                             self.transformed_edges[birth],
                             death,
@@ -543,6 +544,7 @@ class WeightedGraph:
         """Plots all the subgraphs of self.G given by considering the sublevel
         sets of the function defined on the weighted edges
         """
+        import matplotlib.pyplot as plt
         fig, self.ax_arr = plt.subplots(int(np.ceil(len(self.filtration) / 3)),3)
         self.ax_arr = self.ax_arr.ravel()
         ordinals = ['st', 'nd', 'rd']
@@ -581,6 +583,7 @@ class WeightedGraph:
         """Uses gudhi and networkx wrappers to plot the persistence diagram and
         the subgraphs obtained through the steady-subgraphs analysis, respectively
         """
+        import matplotlib.pyplot as plt
         pds = []
         if hasattr(self, "steady_pd"):
             pds.append(self.steady_pd)

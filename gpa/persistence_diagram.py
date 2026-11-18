@@ -101,16 +101,27 @@ class PersistenceDiagram(object):
             persistence diagram's points.
         """
         cornerpoints = cornerpoints or self.cornerpoints
-        persistence_to_plot = persistence_to_plot or self.persistence
+        persistence_to_plot = persistence_to_plot or self._persistence_pairs()
         ax_handle = plot_persistence_diagram(persistence_to_plot,
                                              cornerpoints = cornerpoints,
                                              coloring = coloring)
         return ax_handle
 
+    def _persistence_pairs(self):
+        """Persistence in gudhi format, (k, (birth, death)).
+
+        Uses ``self.persistence`` when it has been set explicitly (e.g. from a
+        filtered complex), otherwise the pairs derived from the cornerpoints.
+        """
+        persistence = getattr(self, "persistence", None)
+        if persistence is None:
+            persistence = self.persistence_to_plot
+        return persistence
+
     def get_cornerpoint_objects(self):
         """Creates a list of CornerPoint instances
         """
-        self.cornerpoints = [CornerPoint(k, b, d) for (k, (b, d)) in self.persistence]
+        self.cornerpoints = [CornerPoint(k, b, d) for (k, (b, d)) in self._persistence_pairs()]
         self.cornerpoints.sort(key=lambda x: x.persistence)
         self.get_cornerpoints_multiset()
 
@@ -169,6 +180,7 @@ class PersistenceDiagram(object):
         ax_handle
         """
         if ax_handle is None:
+            import matplotlib.pyplot as plt
             fig, ax_handle = plt.subplots()
         if hasattr(self, 'gap_number'):
             n = self.gap_number
