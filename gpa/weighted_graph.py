@@ -479,7 +479,9 @@ class WeightedGraph:
             death = max(pers)
             if len(pers) == 1:
                 death = birth + 1
-            death = np.inf if death == len(self.filtration)-1 else self.transformed_edges[death]
+            # >=: a vertex alive only at the last level has death = birth + 1,
+            # one past the end (IndexError before); it is alive at the end.
+            death = np.inf if death >= len(self.filtration)-1 else self.transformed_edges[death]
             c = CornerPoint(0,
                             self.transformed_edges[birth],
                             death,
