@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
 from gpa.read_data_from_csv import read_graph_structure_from_csv
 from gpa.weighted_graph import WeightedGraph
 

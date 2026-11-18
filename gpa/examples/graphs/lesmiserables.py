@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import os
 from pprint import pprint
 from gpa.read_data_from_csv import read_graph_structure_from_csv
 from gpa.weighted_graph import WeightedGraph

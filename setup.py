@@ -34,7 +34,9 @@ install it on Python {}.{}.
 """.format(*(REQUIRED_PYTHON + CURRENT_PYTHON)))
     sys.exit(1)
 
-requirements = (pathlib.Path(__file__).parent / "requirements.txt").read_text().splitlines()
+requirements = [line.strip() for line in
+                (pathlib.Path(__file__).parent / "requirements.txt").read_text().splitlines()
+                if line.strip() and not line.startswith("#")]
 EXCLUDE_FROM_PACKAGES = []
 
 setup(
@@ -49,6 +51,7 @@ setup(
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     install_requires=requirements,
+    extras_require={'plot': ['matplotlib', 'seaborn']},
     entry_points={},
     zip_safe=False,
     classifiers=[
@@ -61,7 +64,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.9',
-        'Topic :: Scientific/Engineering'
+        'Programming Language :: Python :: 3.12',
+        'Topic :: Scientific/Engineering',
         'Topic :: Scientific/Engineering :: Machine Learning',
         'Topic :: Scientific/Engineering :: Data Analysis',
         'Topic :: Scientific/Engineering :: Topology',
